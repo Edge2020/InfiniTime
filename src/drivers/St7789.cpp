@@ -1,5 +1,8 @@
 #include "drivers/St7789.h"
 #include <hal/nrf_gpio.h>
+
+#include <hal/nrf_spi.h>
+
 #include <libraries/delay/nrf_delay.h>
 #include <nrfx_log.h>
 #include "drivers/Spi.h"

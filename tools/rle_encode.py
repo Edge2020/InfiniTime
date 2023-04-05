@@ -8,6 +8,7 @@ import sys
 import os.path
 from PIL import Image
 
+
 def clut8_rgb888(i):
     """Reference CLUT for wasp-os.
 
@@ -24,21 +25,22 @@ def clut8_rgb888(i):
     :return:      24-bit colour in RGB888 format
     """
     if i < 216:
-        rgb888  = ( i  % 6) * 0x33
+        rgb888 = (i % 6) * 0x33
         rg = i // 6
-        rgb888 += (rg  % 6) * 0x3300
+        rgb888 += (rg % 6) * 0x3300
         rgb888 += (rg // 6) * 0x330000
     elif i < 252:
         i -= 216
-        rgb888  =     0x7f + (( i  % 3) * 0x33)
+        rgb888 = 0x7f + ((i % 3) * 0x33)
         rg = i // 3
-        rgb888 +=   0x4c00 + ((rg  % 4) * 0x3300)
+        rgb888 += 0x4c00 + ((rg % 4) * 0x3300)
         rgb888 += 0x7f0000 + ((rg // 4) * 0x330000)
     else:
         i -= 252
         rgb888 = 0x2c2c2c + (0x101010 * i)
 
     return rgb888
+
 
 def clut8_rgb565(i):
     """RBG565 CLUT for wasp-os.
@@ -56,15 +58,15 @@ def clut8_rgb565(i):
     :return:      16-bit colour in RGB565 format
     """
     if i < 216:
-        rgb565  = (( i  % 6) * 0x33) >> 3
+        rgb565 = ((i % 6) * 0x33) >> 3
         rg = i // 6
-        rgb565 += ((rg  % 6) * (0x33 << 3)) & 0x07e0
+        rgb565 += ((rg % 6) * (0x33 << 3)) & 0x07e0
         rgb565 += ((rg // 6) * (0x33 << 8)) & 0xf800
     elif i < 252:
         i -= 216
-        rgb565  = (0x7f + (( i  % 3) * 0x33)) >> 3
+        rgb565 = (0x7f + ((i % 3) * 0x33)) >> 3
         rg = i // 3
-        rgb565 += ((0x4c << 3) + ((rg  % 4) * (0x33 << 3))) & 0x07e0
+        rgb565 += ((0x4c << 3) + ((rg % 4) * (0x33 << 3))) & 0x07e0
         rgb565 += ((0x7f << 8) + ((rg // 4) * (0x33 << 8))) & 0xf800
     else:
         i -= 252
@@ -73,6 +75,7 @@ def clut8_rgb565(i):
         rgb565 = (gr5 << 11) + (gr6 << 5) + gr5
 
     return rgb565
+
 
 class ReverseCLUT:
     def __init__(self, clut):
@@ -108,11 +111,13 @@ class ReverseCLUT:
                 index = i
 
         self.lookup[rgb888] = index
-        #print(f'# #{rgb888:06x} -> #{clut8_rgb888(index):06x}')
+        # print(f'# #{rgb888:06x} -> #{clut8_rgb888(index):06x}')
         return index
+
 
 def varname(p):
     return os.path.basename(os.path.splitext(p)[0])
+
 
 def encode(im):
     pixels = im.load()
@@ -133,7 +138,7 @@ def encode(im):
             newpx = pixels[x, y]
             if newpx == px:
                 rl += 1
-                assert(rl < (1 << 21))
+                assert (rl < (1 << 21))
                 continue
 
             # Code the previous run
@@ -147,6 +152,7 @@ def encode(im):
     encode_pixel(px, rl)
 
     return (im.width, im.height, bytes(rle))
+
 
 def encode_2bit(im):
     """2-bit palette based RLE encoder.
@@ -162,8 +168,8 @@ def encode_2bit(im):
     this encoding is about 30% larger than a 1-bit encoding.
     """
     pixels = im.load()
-    assert(im.width <= 255)
-    assert(im.height <= 255)
+    assert (im.width <= 255)
+    assert (im.height <= 255)
 
     full_palette = ReverseCLUT(clut8_rgb888)
 
@@ -205,7 +211,7 @@ def encode_2bit(im):
             newpx = pixels[x, y]
             if newpx == px:
                 rl += 1
-                assert(rl < (1 << 21))
+                assert (rl < (1 << 21))
                 continue
 
             # Code the previous run
@@ -219,6 +225,7 @@ def encode_2bit(im):
     encode_pixel(px, rl)
 
     return bytes(rle)
+
 
 def encode_8bit(im):
     """Experimental 8-bit RLE encoder.
@@ -243,17 +250,17 @@ def encode_8bit(im):
         rl -= 2
         if rl > (1 << 14):
             rle.append(0x80 | ((rl >> 14) & 0x7f))
-        if rl > (1 <<  7):
-            rle.append(0x80 | ((rl >>  7) & 0x7f))
+        if rl > (1 << 7):
+            rle.append(0x80 | ((rl >> 7) & 0x7f))
         if rl >= 0:
-            rle.append(         rl        & 0x7f )
+            rle.append(rl & 0x7f)
 
     for y in range(im.height):
         for x in range(im.width):
             newpx = pixels[x, y]
             if newpx == px:
                 rl += 1
-                assert(rl < (1 << 21))
+                assert (rl < (1 << 21))
                 continue
 
             # Code the previous run
@@ -267,6 +274,7 @@ def encode_8bit(im):
     encode_pixel(px, rl)
 
     return (im.width, im.height, bytes(rle))
+
 
 def render_c(image, fname, indent, depth):
     extra_indent = ' ' * indent
@@ -290,6 +298,7 @@ def render_c(image, fname, indent, depth):
             print(f'\n{extra_indent} ', end='')
             i = 0
     print('\n};')
+
 
 def render_py(image, fname, indent, depth):
     extra_indent = ' ' * indent
@@ -339,7 +348,8 @@ def decode_to_ascii(image):
             color = black
 
     # Check the image is the correct length
-    assert(dp == 0)
+    assert (dp == 0)
+
 
 parser = argparse.ArgumentParser(description='RLE encoder tool.')
 parser.add_argument('files', nargs='+',
@@ -364,7 +374,7 @@ elif args.twobit:
     depth = 2
 else:
     encoder = encode
-    depth =1
+    depth = 1
 
 for fname in args.files:
     image = encoder(Image.open(fname))

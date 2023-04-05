@@ -14,7 +14,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(NRF_TARGET "nrf52")
+set(NRF_TARGET "nrf52840")
 
 if (NOT ARM_NONE_EABI_TOOLCHAIN_PATH)
   message(FATAL_ERROR "The path to the toolchain (arm-none-eabi) must be specified on the command line (add -DARM_NONE_EABI_TOOLCHAIN_PATH=<path>")

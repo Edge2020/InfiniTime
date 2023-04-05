@@ -13,7 +13,7 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.12)
    # https://cmake.org/cmake/help/latest/module/FindPython3.html
    find_package(Python3 REQUIRED)
 else()
-   set(Python3_EXECUTABLE "python")
+   set(Python3_EXECUTABLE "python3")
 endif()
 
 # create static library building fonts

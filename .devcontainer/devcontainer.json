@@ -23,7 +23,11 @@
 		"ms-vscode.cmake-tools",
 		"marus25.cortex-debug",
 		"notskm.clang-tidy",
-		"mjohns.clang-format"
+		"mjohns.clang-format",
+		"metalcode-eu.linux-arm-none-eabi",
+		"jasonnutter.search-node-modules",
+		"NarasimaPandiyan.jetbrainsmono",
+		"waderyan.nodejs-extension-pack"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

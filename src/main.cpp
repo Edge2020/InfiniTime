@@ -43,6 +43,10 @@
 #include "drivers/TwiMaster.h"
 #include "drivers/Cst816s.h"
 #include "drivers/PinMap.h"
+
+/* Added */
+#include "drivers/QspiMaster.h"
+
 #include "systemtask/SystemTask.h"
 #include "touchhandler/TouchHandler.h"
 #include "buttonhandler/ButtonHandler.h"

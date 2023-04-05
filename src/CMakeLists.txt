@@ -31,8 +31,12 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET "")
 
 set(SDK_SOURCE_FILES
         # Startup
-        "${NRF5_SDK_PATH}/modules/nrfx/mdk/system_nrf52.c"
-        "${NRF5_SDK_PATH}/modules/nrfx/mdk/gcc_startup_nrf52.S"
+        # "${NRF5_SDK_PATH}/modules/nrfx/mdk/system_nrf52.c"
+        # "${NRF5_SDK_PATH}/modules/nrfx/mdk/gcc_startup_nrf52.S"
+
+        # Switching to nRF52840 instead of nRf52832
+        "${NRF5_SDK_PATH}/modules/nrfx/mdk/system_nrf52840.c"
+        "${NRF5_SDK_PATH}/modules/nrfx/mdk/gcc_startup_nrf52840.S"
 
         # Base SDK
         "${NRF5_SDK_PATH}/components/boards/boards.c"
@@ -42,6 +46,8 @@ set(SDK_SOURCE_FILES
         "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_gpiote.c"
         "${NRF5_SDK_PATH}/modules/nrfx/soc/nrfx_atomic.c"
         "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_saadc.c"
+
+
 
         # FreeRTOS
         ${NRF5_SDK_PATH}/external/freertos/source/croutine.c
@@ -70,6 +76,9 @@ set(SDK_SOURCE_FILES
         "${NRF5_SDK_PATH}/components/libraries/ringbuf/nrf_ringbuf.c"
         "${NRF5_SDK_PATH}/components/libraries/strerror/nrf_strerror.c"
 
+        # QSPI
+        "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_qspi.c"
+
         # Segger RTT
         "${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c"
         "${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT.c"
@@ -85,6 +94,7 @@ set(SDK_SOURCE_FILES
 
         # GPIOTE
         "${NRF5_SDK_PATH}/components/libraries/gpiote/app_gpiote.c"
+
         )
 
 set(TINYCRYPT_SRC
@@ -441,6 +451,15 @@ list(APPEND SOURCE_FILES
         drivers/SpiNorFlash.cpp
         drivers/SpiMaster.cpp
         drivers/Spi.cpp
+
+        ## added 
+
+        drivers/QspiMaster.cpp
+        # drivers/Qspi.cpp
+        # drivers/Gc9b71.cpp
+
+        ##
+
         drivers/Watchdog.cpp
         drivers/InternalFlash.cpp
         drivers/Hrs3300.cpp
@@ -622,6 +641,16 @@ set(INCLUDE_FILES
         drivers/SpiNorFlash.h
         drivers/SpiMaster.h
         drivers/Spi.h
+
+        ## added
+
+        drivers/QspiMaster.h
+        # drivers/Qspi.h
+        # drivers/Gc9b71.h
+
+        ##
+
+
         drivers/Watchdog.h
         drivers/InternalFlash.h
         drivers/Hrs3300.h
@@ -780,7 +809,8 @@ set(ASM_FLAGS -x assembler-with-cpp)
 add_definitions(-DCONFIG_GPIO_AS_PINRESET)
 add_definitions(-DNIMBLE_CFG_CONTROLLER)
 add_definitions(-DOS_CPUTIME_FREQ)
-add_definitions(-DNRF52 -DNRF52832 -DNRF52832_XXAA -DNRF52_PAN_74 -DNRF52_PAN_64 -DNRF52_PAN_12 -DNRF52_PAN_58 -DNRF52_PAN_54 -DNRF52_PAN_31 -DNRF52_PAN_51 -DNRF52_PAN_36 -DNRF52_PAN_15 -DNRF52_PAN_20 -DNRF52_PAN_55 -DBOARD_PCA10040)
+# add_definitions(-DNRF52 -DNRF52832 -DNRF52832_XXAA -DNRF52_PAN_74 -DNRF52_PAN_64 -DNRF52_PAN_12 -DNRF52_PAN_58 -DNRF52_PAN_54 -DNRF52_PAN_31 -DNRF52_PAN_51 -DNRF52_PAN_36 -DNRF52_PAN_15 -DNRF52_PAN_20 -DNRF52_PAN_55 -DBOARD_PCA10040)
+add_definitions(-DNRF52840 -DNRF52840_XXAA -DNRF52_PAN_74 -DNRF52_PAN_64 -DNRF52_PAN_12 -DNRF52_PAN_58 -DNRF52_PAN_54 -DNRF52_PAN_31 -DNRF52_PAN_51 -DNRF52_PAN_36 -DNRF52_PAN_15 -DNRF52_PAN_20 -DNRF52_PAN_55 -DBOARD_PCA10040)
 add_definitions(-DFREERTOS)
 add_definitions(-D__STACK_SIZE=1024)
 add_definitions(-D__HEAP_SIZE=4096)
